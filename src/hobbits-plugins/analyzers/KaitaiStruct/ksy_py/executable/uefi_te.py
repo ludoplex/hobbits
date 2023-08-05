@@ -8,7 +8,9 @@ from enum import Enum
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class UefiTe(KaitaiStruct):
     """This type of executables could be found inside the UEFI firmware. The UEFI 
@@ -50,7 +52,7 @@ class UefiTe(KaitaiStruct):
         self._debug['sections']['start'] = self._io.pos()
         self.sections = [None] * (self.te_hdr.num_sections)
         for i in range(self.te_hdr.num_sections):
-            if not 'arr' in self._debug['sections']:
+            if 'arr' not in self._debug['sections']:
                 self._debug['sections']['arr'] = []
             self._debug['sections']['arr'].append({'start': self._io.pos()})
             _t_sections = UefiTe.Section(self._io, self, self._root)
@@ -114,7 +116,7 @@ class UefiTe(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(2)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x56\x5A":
+            if self.magic != b"\x56\x5A":
                 raise kaitaistruct.ValidationNotEqualError(b"\x56\x5A", self.magic, self._io, u"/types/te_header/seq/0")
             self._debug['machine']['start'] = self._io.pos()
             self.machine = KaitaiStream.resolve_enum(UefiTe.TeHeader.MachineType, self._io.read_u2le())

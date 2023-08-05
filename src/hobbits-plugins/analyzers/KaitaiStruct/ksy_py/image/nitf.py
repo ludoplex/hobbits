@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Nitf(KaitaiStruct):
     """The NITF (National Image Transition Format) format is a file format developed by the U.S. Government for
@@ -39,7 +41,7 @@ class Nitf(KaitaiStruct):
         self._debug['image_segments']['start'] = self._io.pos()
         self.image_segments = [None] * (int(self.header.num_image_segments))
         for i in range(int(self.header.num_image_segments)):
-            if not 'arr' in self._debug['image_segments']:
+            if 'arr' not in self._debug['image_segments']:
                 self._debug['image_segments']['arr'] = []
             self._debug['image_segments']['arr'].append({'start': self._io.pos()})
             _t_image_segments = Nitf.ImageSegment(i, self._io, self, self._root)
@@ -51,7 +53,7 @@ class Nitf(KaitaiStruct):
         self._debug['graphics_segments']['start'] = self._io.pos()
         self.graphics_segments = [None] * (int(self.header.num_graphics_segments))
         for i in range(int(self.header.num_graphics_segments)):
-            if not 'arr' in self._debug['graphics_segments']:
+            if 'arr' not in self._debug['graphics_segments']:
                 self._debug['graphics_segments']['arr'] = []
             self._debug['graphics_segments']['arr'].append({'start': self._io.pos()})
             _t_graphics_segments = Nitf.GraphicsSegment(i, self._io, self, self._root)
@@ -63,7 +65,7 @@ class Nitf(KaitaiStruct):
         self._debug['text_segments']['start'] = self._io.pos()
         self.text_segments = [None] * (int(self.header.num_text_files))
         for i in range(int(self.header.num_text_files)):
-            if not 'arr' in self._debug['text_segments']:
+            if 'arr' not in self._debug['text_segments']:
                 self._debug['text_segments']['arr'] = []
             self._debug['text_segments']['arr'].append({'start': self._io.pos()})
             _t_text_segments = Nitf.TextSegment(i, self._io, self, self._root)
@@ -75,7 +77,7 @@ class Nitf(KaitaiStruct):
         self._debug['data_extension_segments']['start'] = self._io.pos()
         self.data_extension_segments = [None] * (int(self.header.num_data_extension))
         for i in range(int(self.header.num_data_extension)):
-            if not 'arr' in self._debug['data_extension_segments']:
+            if 'arr' not in self._debug['data_extension_segments']:
                 self._debug['data_extension_segments']['arr'] = []
             self._debug['data_extension_segments']['arr'].append({'start': self._io.pos()})
             _t_data_extension_segments = Nitf.DataExtensionSegment(i, self._io, self, self._root)
@@ -87,7 +89,7 @@ class Nitf(KaitaiStruct):
         self._debug['reserved_extension_segments']['start'] = self._io.pos()
         self.reserved_extension_segments = [None] * (int(self.header.num_reserved_extension))
         for i in range(int(self.header.num_reserved_extension)):
-            if not 'arr' in self._debug['reserved_extension_segments']:
+            if 'arr' not in self._debug['reserved_extension_segments']:
                 self._debug['reserved_extension_segments']['arr'] = []
             self._debug['reserved_extension_segments']['arr'].append({'start': self._io.pos()})
             _t_reserved_extension_segments = Nitf.ReservedExtensionSegment(i, self._io, self, self._root)
@@ -187,7 +189,7 @@ class Nitf(KaitaiStruct):
             self._debug['img_filter_condition']['start'] = self._io.pos()
             self.img_filter_condition = self._io.read_bytes(1)
             self._debug['img_filter_condition']['end'] = self._io.pos()
-            if not self.img_filter_condition == b"\x4E":
+            if self.img_filter_condition != b"\x4E":
                 raise kaitaistruct.ValidationNotEqualError(b"\x4E", self.img_filter_condition, self._io, u"/types/band_info/seq/2")
             self._debug['img_filter_code']['start'] = self._io.pos()
             self.img_filter_code = (self._io.read_bytes(3)).decode(u"UTF-8")
@@ -203,7 +205,7 @@ class Nitf(KaitaiStruct):
             self._debug['luts']['start'] = self._io.pos()
             self.luts = [None] * (int(self.num_luts))
             for i in range(int(self.num_luts)):
-                if not 'arr' in self._debug['luts']:
+                if 'arr' not in self._debug['luts']:
                     self._debug['luts']['arr'] = []
                 self._debug['luts']['arr'].append({'start': self._io.pos()})
                 self.luts[i] = self._io.read_bytes(int(self.num_lut_entries))
@@ -243,7 +245,10 @@ class Nitf(KaitaiStruct):
             if hasattr(self, '_m_has_mask'):
                 return self._m_has_mask if hasattr(self, '_m_has_mask') else None
 
-            self._m_has_mask =  (((self.image_sub_header.img_compression)[0:1] == u"M") or ((self.image_sub_header.img_compression)[1:2] == u"M")) 
+            self._m_has_mask = (
+                self.image_sub_header.img_compression[:1] == u"M"
+                or (self.image_sub_header.img_compression)[1:2] == u"M"
+            )
             return self._m_has_mask if hasattr(self, '_m_has_mask') else None
 
 
@@ -277,7 +282,7 @@ class Nitf(KaitaiStruct):
             self._debug['file_part_type_sy']['start'] = self._io.pos()
             self.file_part_type_sy = self._io.read_bytes(2)
             self._debug['file_part_type_sy']['end'] = self._io.pos()
-            if not self.file_part_type_sy == b"\x53\x59":
+            if self.file_part_type_sy != b"\x53\x59":
                 raise kaitaistruct.ValidationNotEqualError(b"\x53\x59", self.file_part_type_sy, self._io, u"/types/graphic_sub_header/seq/0")
             self._debug['graphic_id']['start'] = self._io.pos()
             self.graphic_id = (self._io.read_bytes(10)).decode(u"UTF-8")
@@ -296,7 +301,7 @@ class Nitf(KaitaiStruct):
             self._debug['graphic_type']['start'] = self._io.pos()
             self.graphic_type = self._io.read_bytes(1)
             self._debug['graphic_type']['end'] = self._io.pos()
-            if not self.graphic_type == b"\x43":
+            if self.graphic_type != b"\x43":
                 raise kaitaistruct.ValidationNotEqualError(b"\x43", self.graphic_type, self._io, u"/types/graphic_sub_header/seq/5")
             self._debug['reserved1']['start'] = self._io.pos()
             self.reserved1 = (self._io.read_bytes(13)).decode(u"UTF-8")
@@ -446,7 +451,7 @@ class Nitf(KaitaiStruct):
                 self._debug['bmrbnd']['start'] = self._io.pos()
                 self.bmrbnd = [None] * (self.bmrtmr_count)
                 for i in range(self.bmrtmr_count):
-                    if not 'arr' in self._debug['bmrbnd']:
+                    if 'arr' not in self._debug['bmrbnd']:
                         self._debug['bmrbnd']['arr'] = []
                     self._debug['bmrbnd']['arr'].append({'start': self._io.pos()})
                     self.bmrbnd[i] = self._io.read_u4be()
@@ -458,7 +463,7 @@ class Nitf(KaitaiStruct):
                 self._debug['tmrbnd']['start'] = self._io.pos()
                 self.tmrbnd = [None] * (self.bmrtmr_count)
                 for i in range(self.bmrtmr_count):
-                    if not 'arr' in self._debug['tmrbnd']:
+                    if 'arr' not in self._debug['tmrbnd']:
                         self._debug['tmrbnd']['arr'] = []
                     self._debug['tmrbnd']['arr'].append({'start': self._io.pos()})
                     self.tmrbnd[i] = self._io.read_u4be()
@@ -649,7 +654,7 @@ class Nitf(KaitaiStruct):
             self._debug['file_part_type']['start'] = self._io.pos()
             self.file_part_type = self._io.read_bytes(2)
             self._debug['file_part_type']['end'] = self._io.pos()
-            if not self.file_part_type == b"\x49\x4D":
+            if self.file_part_type != b"\x49\x4D":
                 raise kaitaistruct.ValidationNotEqualError(b"\x49\x4D", self.file_part_type, self._io, u"/types/image_sub_header/seq/0")
             self._debug['image_id_1']['start'] = self._io.pos()
             self.image_id_1 = (self._io.read_bytes(10)).decode(u"UTF-8")
@@ -708,7 +713,7 @@ class Nitf(KaitaiStruct):
             self._debug['img_comments']['start'] = self._io.pos()
             self.img_comments = [None] * (int(self.num_img_comments))
             for i in range(int(self.num_img_comments)):
-                if not 'arr' in self._debug['img_comments']:
+                if 'arr' not in self._debug['img_comments']:
                     self._debug['img_comments']['arr'] = []
                 self._debug['img_comments']['arr'].append({'start': self._io.pos()})
                 _t_img_comments = Nitf.ImageComment(self._io, self, self._root)
@@ -734,7 +739,7 @@ class Nitf(KaitaiStruct):
             self._debug['bands']['start'] = self._io.pos()
             self.bands = [None] * ((int(self.num_bands) if int(self.num_bands) != 0 else int(self.num_multispectral_bands)))
             for i in range((int(self.num_bands) if int(self.num_bands) != 0 else int(self.num_multispectral_bands))):
-                if not 'arr' in self._debug['bands']:
+                if 'arr' not in self._debug['bands']:
                     self._debug['bands']['arr'] = []
                 self._debug['bands']['arr'].append({'start': self._io.pos()})
                 _t_bands = Nitf.BandInfo(self._io, self, self._root)
@@ -788,7 +793,7 @@ class Nitf(KaitaiStruct):
                 self._debug['user_def_img_data']['start'] = self._io.pos()
                 self.user_def_img_data = [None] * ((int(self.user_def_img_data_len) - 3))
                 for i in range((int(self.user_def_img_data_len) - 3)):
-                    if not 'arr' in self._debug['user_def_img_data']:
+                    if 'arr' not in self._debug['user_def_img_data']:
                         self._debug['user_def_img_data']['arr'] = []
                     self._debug['user_def_img_data']['arr'].append({'start': self._io.pos()})
                     self.user_def_img_data[i] = self._io.read_u1()
@@ -814,7 +819,7 @@ class Nitf(KaitaiStruct):
             self._debug['file_part_type_re']['start'] = self._io.pos()
             self.file_part_type_re = self._io.read_bytes(2)
             self._debug['file_part_type_re']['end'] = self._io.pos()
-            if not self.file_part_type_re == b"\x52\x45":
+            if self.file_part_type_re != b"\x52\x45":
                 raise kaitaistruct.ValidationNotEqualError(b"\x52\x45", self.file_part_type_re, self._io, u"/types/reserved_sub_header/seq/0")
             self._debug['res_type_id']['start'] = self._io.pos()
             self.res_type_id = (self._io.read_bytes(25)).decode(u"UTF-8")
@@ -849,7 +854,7 @@ class Nitf(KaitaiStruct):
             self._debug['file_part_type_de']['start'] = self._io.pos()
             self.file_part_type_de = self._io.read_bytes(2)
             self._debug['file_part_type_de']['end'] = self._io.pos()
-            if not self.file_part_type_de == b"\x44\x45":
+            if self.file_part_type_de != b"\x44\x45":
                 raise kaitaistruct.ValidationNotEqualError(b"\x44\x45", self.file_part_type_de, self._io, u"/types/data_sub_header_base/seq/0")
             self._debug['desid']['start'] = self._io.pos()
             self.desid = (self._io.read_bytes(25)).decode(u"UTF-8")

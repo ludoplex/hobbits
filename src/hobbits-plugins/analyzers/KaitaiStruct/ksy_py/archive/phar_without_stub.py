@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import php_serialized_value
 class PharWithoutStub(KaitaiStruct):
@@ -89,7 +91,7 @@ class PharWithoutStub(KaitaiStruct):
         self._debug['files']['start'] = self._io.pos()
         self.files = [None] * (self.manifest.num_files)
         for i in range(self.manifest.num_files):
-            if not 'arr' in self._debug['files']:
+            if 'arr' not in self._debug['files']:
                 self._debug['files']['arr'] = []
             self._debug['files']['arr'].append({'start': self._io.pos()})
             self.files[i] = self._io.read_bytes(self.manifest.file_entries[i].len_data_compressed)
@@ -152,7 +154,7 @@ class PharWithoutStub(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x47\x42\x4D\x42":
+            if self.magic != b"\x47\x42\x4D\x42":
                 raise kaitaistruct.ValidationNotEqualError(b"\x47\x42\x4D\x42", self.magic, self._io, u"/types/signature/seq/2")
 
 
@@ -341,7 +343,7 @@ class PharWithoutStub(KaitaiStruct):
             self._debug['file_entries']['start'] = self._io.pos()
             self.file_entries = [None] * (self.num_files)
             for i in range(self.num_files):
-                if not 'arr' in self._debug['file_entries']:
+                if 'arr' not in self._debug['file_entries']:
                     self._debug['file_entries']['arr'] = []
                 self._debug['file_entries']['arr'].append({'start': self._io.pos()})
                 _t_file_entries = PharWithoutStub.FileEntry(self._io, self, self._root)

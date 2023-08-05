@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class ZxSpectrumTap(KaitaiStruct):
     """TAP files are used by emulators of ZX Spectrum computer (released in
@@ -43,7 +45,7 @@ class ZxSpectrumTap(KaitaiStruct):
         self.blocks = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['blocks']:
+            if 'arr' not in self._debug['blocks']:
                 self._debug['blocks']['arr'] = []
             self._debug['blocks']['arr'].append({'start': self._io.pos()})
             _t_blocks = ZxSpectrumTap.Block(self._io, self, self._root)
@@ -144,10 +146,10 @@ class ZxSpectrumTap(KaitaiStruct):
             if _on == ZxSpectrumTap.HeaderTypeEnum.program:
                 self.params = ZxSpectrumTap.ProgramParams(self._io, self, self._root)
                 self.params._read()
-            elif _on == ZxSpectrumTap.HeaderTypeEnum.num_array:
-                self.params = ZxSpectrumTap.ArrayParams(self._io, self, self._root)
-                self.params._read()
-            elif _on == ZxSpectrumTap.HeaderTypeEnum.char_array:
+            elif _on in [
+                ZxSpectrumTap.HeaderTypeEnum.num_array,
+                ZxSpectrumTap.HeaderTypeEnum.char_array,
+            ]:
                 self.params = ZxSpectrumTap.ArrayParams(self._io, self, self._root)
                 self.params._read()
             elif _on == ZxSpectrumTap.HeaderTypeEnum.bytes:
@@ -177,7 +179,7 @@ class ZxSpectrumTap(KaitaiStruct):
             self._debug['reserved1']['start'] = self._io.pos()
             self.reserved1 = self._io.read_bytes(2)
             self._debug['reserved1']['end'] = self._io.pos()
-            if not self.reserved1 == b"\x00\x80":
+            if self.reserved1 != b"\x00\x80":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x80", self.reserved1, self._io, u"/types/array_params/seq/2")
 
 

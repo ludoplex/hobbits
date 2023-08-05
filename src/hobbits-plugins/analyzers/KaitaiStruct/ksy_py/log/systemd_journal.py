@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class SystemdJournal(KaitaiStruct):
     """systemd, a popular user-space system/service management suite on Linux,
@@ -45,7 +47,7 @@ class SystemdJournal(KaitaiStruct):
         self._debug['objects']['start'] = self._io.pos()
         self.objects = [None] * (self.header.num_objects)
         for i in range(self.header.num_objects):
-            if not 'arr' in self._debug['objects']:
+            if 'arr' not in self._debug['objects']:
                 self._debug['objects']['arr'] = []
             self._debug['objects']['arr'].append({'start': self._io.pos()})
             _t_objects = SystemdJournal.JournalObject(self._io, self, self._root)
@@ -67,7 +69,7 @@ class SystemdJournal(KaitaiStruct):
             self._debug['signature']['start'] = self._io.pos()
             self.signature = self._io.read_bytes(8)
             self._debug['signature']['end'] = self._io.pos()
-            if not self.signature == b"\x4C\x50\x4B\x53\x48\x48\x52\x48":
+            if self.signature != b"\x4C\x50\x4B\x53\x48\x48\x52\x48":
                 raise kaitaistruct.ValidationNotEqualError(b"\x4C\x50\x4B\x53\x48\x48\x52\x48", self.signature, self._io, u"/types/header/seq/0")
             self._debug['compatible_flags']['start'] = self._io.pos()
             self.compatible_flags = self._io.read_u4le()

@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Tga(KaitaiStruct):
     """TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
@@ -80,7 +82,7 @@ class Tga(KaitaiStruct):
             self._debug['color_map']['start'] = self._io.pos()
             self.color_map = [None] * (self.num_color_map)
             for i in range(self.num_color_map):
-                if not 'arr' in self._debug['color_map']:
+                if 'arr' not in self._debug['color_map']:
                     self._debug['color_map']['arr'] = []
                 self._debug['color_map']['arr'].append({'start': self._io.pos()})
                 self.color_map[i] = self._io.read_bytes((self.color_map_depth + 7) // 8)
@@ -151,7 +153,7 @@ class Tga(KaitaiStruct):
             self._debug['comments']['start'] = self._io.pos()
             self.comments = [None] * (4)
             for i in range(4):
-                if not 'arr' in self._debug['comments']:
+                if 'arr' not in self._debug['comments']:
                     self._debug['comments']['arr'] = []
                 self._debug['comments']['arr'].append({'start': self._io.pos()})
                 self.comments[i] = (self._io.read_bytes(81)).decode(u"ASCII")

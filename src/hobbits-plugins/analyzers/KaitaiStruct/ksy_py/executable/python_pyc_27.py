@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class PythonPyc27(KaitaiStruct):
     """Python interpreter runs .py files in 2 step process: first, it
@@ -147,7 +149,7 @@ class PythonPyc27(KaitaiStruct):
             self._debug['string_magic']['start'] = self._io.pos()
             self.string_magic = self._io.read_bytes(1)
             self._debug['string_magic']['end'] = self._io.pos()
-            if not self.string_magic == b"\x73":
+            if self.string_magic != b"\x73":
                 raise kaitaistruct.ValidationNotEqualError(b"\x73", self.string_magic, self._io, u"/types/assembly/seq/0")
             self._debug['length']['start'] = self._io.pos()
             self.length = self._io.read_u4le()
@@ -419,7 +421,7 @@ class PythonPyc27(KaitaiStruct):
                 self._debug['items']['start'] = self._io.pos()
                 self.items = [None] * (self.count)
                 for i in range(self.count):
-                    if not 'arr' in self._debug['items']:
+                    if 'arr' not in self._debug['items']:
                         self._debug['items']['arr'] = []
                     self._debug['items']['arr'].append({'start': self._io.pos()})
                     _t_items = PythonPyc27.PyObject(self._io, self, self._root)
@@ -495,7 +497,7 @@ class PythonPyc27(KaitaiStruct):
             self.items = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['items']:
+                if 'arr' not in self._debug['items']:
                     self._debug['items']['arr'] = []
                 self._debug['items']['arr'].append({'start': self._io.pos()})
                 _t_items = PythonPyc27.OpArg(self._io, self, self._root)

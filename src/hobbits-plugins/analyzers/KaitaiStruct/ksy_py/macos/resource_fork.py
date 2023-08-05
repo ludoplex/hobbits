@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import bytes_with_io
 class ResourceFork(KaitaiStruct):
@@ -258,7 +260,7 @@ class ResourceFork(KaitaiStruct):
                     self._debug['entries']['start'] = self._io.pos()
                     self.entries = [None] * (self.num_types)
                     for i in range(self.num_types):
-                        if not 'arr' in self._debug['entries']:
+                        if 'arr' not in self._debug['entries']:
                             self._debug['entries']['arr'] = []
                         self._debug['entries']['arr'].append({'start': self._io.pos()})
                         _t_entries = ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry(self._io, self, self._root)
@@ -347,7 +349,7 @@ class ResourceFork(KaitaiStruct):
                     self._debug['references']['start'] = self._io.pos()
                     self.references = [None] * (self.num_references)
                     for i in range(self.num_references):
-                        if not 'arr' in self._debug['references']:
+                        if 'arr' not in self._debug['references']:
                             self._debug['references']['arr'] = []
                         self._debug['references']['arr'].append({'start': self._io.pos()})
                         _t_references = ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference(self._io, self, self._root)

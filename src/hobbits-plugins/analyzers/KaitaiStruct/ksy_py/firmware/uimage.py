@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Uimage(KaitaiStruct):
     """The new uImage format allows more flexibility in handling images of various
@@ -111,7 +113,7 @@ class Uimage(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x27\x05\x19\x56":
+            if self.magic != b"\x27\x05\x19\x56":
                 raise kaitaistruct.ValidationNotEqualError(b"\x27\x05\x19\x56", self.magic, self._io, u"/types/uheader/seq/0")
             self._debug['header_crc']['start'] = self._io.pos()
             self.header_crc = self._io.read_u4be()

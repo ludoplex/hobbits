@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class ShapefileIndex(KaitaiStruct):
 
@@ -43,7 +45,7 @@ class ShapefileIndex(KaitaiStruct):
         self.records = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['records']:
+            if 'arr' not in self._debug['records']:
                 self._debug['records']['arr'] = []
             self._debug['records']['arr'].append({'start': self._io.pos()})
             _t_records = ShapefileIndex.Record(self._io, self, self._root)
@@ -66,32 +68,32 @@ class ShapefileIndex(KaitaiStruct):
             self._debug['file_code']['start'] = self._io.pos()
             self.file_code = self._io.read_bytes(4)
             self._debug['file_code']['end'] = self._io.pos()
-            if not self.file_code == b"\x00\x00\x27\x0A":
+            if self.file_code != b"\x00\x00\x27\x0A":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x27\x0A", self.file_code, self._io, u"/types/file_header/seq/0")
             self._debug['unused_field_1']['start'] = self._io.pos()
             self.unused_field_1 = self._io.read_bytes(4)
             self._debug['unused_field_1']['end'] = self._io.pos()
-            if not self.unused_field_1 == b"\x00\x00\x00\x00":
+            if self.unused_field_1 != b"\x00\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_1, self._io, u"/types/file_header/seq/1")
             self._debug['unused_field_2']['start'] = self._io.pos()
             self.unused_field_2 = self._io.read_bytes(4)
             self._debug['unused_field_2']['end'] = self._io.pos()
-            if not self.unused_field_2 == b"\x00\x00\x00\x00":
+            if self.unused_field_2 != b"\x00\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_2, self._io, u"/types/file_header/seq/2")
             self._debug['unused_field_3']['start'] = self._io.pos()
             self.unused_field_3 = self._io.read_bytes(4)
             self._debug['unused_field_3']['end'] = self._io.pos()
-            if not self.unused_field_3 == b"\x00\x00\x00\x00":
+            if self.unused_field_3 != b"\x00\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_3, self._io, u"/types/file_header/seq/3")
             self._debug['unused_field_4']['start'] = self._io.pos()
             self.unused_field_4 = self._io.read_bytes(4)
             self._debug['unused_field_4']['end'] = self._io.pos()
-            if not self.unused_field_4 == b"\x00\x00\x00\x00":
+            if self.unused_field_4 != b"\x00\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_4, self._io, u"/types/file_header/seq/4")
             self._debug['unused_field_5']['start'] = self._io.pos()
             self.unused_field_5 = self._io.read_bytes(4)
             self._debug['unused_field_5']['end'] = self._io.pos()
-            if not self.unused_field_5 == b"\x00\x00\x00\x00":
+            if self.unused_field_5 != b"\x00\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.unused_field_5, self._io, u"/types/file_header/seq/5")
             self._debug['file_length']['start'] = self._io.pos()
             self.file_length = self._io.read_s4be()
@@ -99,7 +101,7 @@ class ShapefileIndex(KaitaiStruct):
             self._debug['version']['start'] = self._io.pos()
             self.version = self._io.read_bytes(4)
             self._debug['version']['end'] = self._io.pos()
-            if not self.version == b"\xE8\x03\x00\x00":
+            if self.version != b"\xE8\x03\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\xE8\x03\x00\x00", self.version, self._io, u"/types/file_header/seq/7")
             self._debug['shape_type']['start'] = self._io.pos()
             self.shape_type = KaitaiStream.resolve_enum(ShapefileIndex.ShapeType, self._io.read_s4le())

@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Zip(KaitaiStruct):
     """ZIP is a popular archive file format, introduced in 1989 by Phil Katz
@@ -76,7 +78,7 @@ class Zip(KaitaiStruct):
         self.sections = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['sections']:
+            if 'arr' not in self._debug['sections']:
                 self._debug['sections']['arr'] = []
             self._debug['sections']['arr'].append({'start': self._io.pos()})
             _t_sections = Zip.PkSection(self._io, self, self._root)
@@ -181,7 +183,7 @@ class Zip(KaitaiStruct):
                 self.attributes = []
                 i = 0
                 while not self._io.is_eof():
-                    if not 'arr' in self._debug['attributes']:
+                    if 'arr' not in self._debug['attributes']:
                         self._debug['attributes']['arr'] = []
                     self._debug['attributes']['arr'].append({'start': self._io.pos()})
                     _t_attributes = Zip.ExtraField.Ntfs.Attribute(self._io, self, self._root)
@@ -403,7 +405,7 @@ class Zip(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(2)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x50\x4B":
+            if self.magic != b"\x50\x4B":
                 raise kaitaistruct.ValidationNotEqualError(b"\x50\x4B", self.magic, self._io, u"/types/pk_section/seq/0")
             self._debug['section_type']['start'] = self._io.pos()
             self.section_type = self._io.read_u2le()
@@ -438,7 +440,7 @@ class Zip(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = Zip.ExtraField(self._io, self, self._root)

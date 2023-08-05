@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Tsm(KaitaiStruct):
     """InfluxDB is a scalable database optimized for storage of time
@@ -44,7 +46,7 @@ class Tsm(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x16\xD1\x16\xD1":
+            if self.magic != b"\x16\xD1\x16\xD1":
                 raise kaitaistruct.ValidationNotEqualError(b"\x16\xD1\x16\xD1", self.magic, self._io, u"/types/header/seq/0")
             self._debug['version']['start'] = self._io.pos()
             self.version = self._io.read_u1()
@@ -88,7 +90,7 @@ class Tsm(KaitaiStruct):
                 self._debug['index_entries']['start'] = self._io.pos()
                 self.index_entries = [None] * (self.entry_count)
                 for i in range(self.entry_count):
-                    if not 'arr' in self._debug['index_entries']:
+                    if 'arr' not in self._debug['index_entries']:
                         self._debug['index_entries']['arr'] = []
                     self._debug['index_entries']['arr'].append({'start': self._io.pos()})
                     _t_index_entries = Tsm.Index.IndexHeader.IndexEntry(self._io, self, self._root)
@@ -165,7 +167,7 @@ class Tsm(KaitaiStruct):
             self._m_entries = []
             i = 0
             while True:
-                if not 'arr' in self._debug['_m_entries']:
+                if 'arr' not in self._debug['_m_entries']:
                     self._debug['_m_entries']['arr'] = []
                 self._debug['_m_entries']['arr'].append({'start': self._io.pos()})
                 _t__m_entries = Tsm.Index.IndexHeader(self._io, self, self._root)

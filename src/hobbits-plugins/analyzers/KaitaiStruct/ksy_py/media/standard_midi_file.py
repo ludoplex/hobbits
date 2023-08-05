@@ -8,7 +8,9 @@ from enum import Enum
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import vlq_base128_be
 class StandardMidiFile(KaitaiStruct):
@@ -42,7 +44,7 @@ class StandardMidiFile(KaitaiStruct):
         self._debug['tracks']['start'] = self._io.pos()
         self.tracks = [None] * (self.hdr.num_tracks)
         for i in range(self.hdr.num_tracks):
-            if not 'arr' in self._debug['tracks']:
+            if 'arr' not in self._debug['tracks']:
                 self._debug['tracks']['arr'] = []
             self._debug['tracks']['arr'].append({'start': self._io.pos()})
             _t_tracks = StandardMidiFile.Track(self._io, self, self._root)
@@ -65,7 +67,7 @@ class StandardMidiFile(KaitaiStruct):
             self.event = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['event']:
+                if 'arr' not in self._debug['event']:
                     self._debug['event']['arr'] = []
                 self._debug['event']['arr'].append({'start': self._io.pos()})
                 _t_event = StandardMidiFile.TrackEvent(self._io, self, self._root)
@@ -242,7 +244,7 @@ class StandardMidiFile(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x4D\x54\x72\x6B":
+            if self.magic != b"\x4D\x54\x72\x6B":
                 raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x72\x6B", self.magic, self._io, u"/types/track/seq/0")
             self._debug['len_events']['start'] = self._io.pos()
             self.len_events = self._io.read_u4be()
@@ -322,7 +324,7 @@ class StandardMidiFile(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x4D\x54\x68\x64":
+            if self.magic != b"\x4D\x54\x68\x64":
                 raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x68\x64", self.magic, self._io, u"/types/header/seq/0")
             self._debug['len_header']['start'] = self._io.pos()
             self.len_header = self._io.read_u4be()

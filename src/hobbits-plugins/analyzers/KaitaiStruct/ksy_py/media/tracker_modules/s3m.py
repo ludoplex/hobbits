@@ -8,7 +8,9 @@ from enum import Enum
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class S3m(KaitaiStruct):
     """Scream Tracker 3 module is a tracker music file format that, as all
@@ -44,7 +46,7 @@ class S3m(KaitaiStruct):
         self._debug['magic1']['start'] = self._io.pos()
         self.magic1 = self._io.read_bytes(1)
         self._debug['magic1']['end'] = self._io.pos()
-        if not self.magic1 == b"\x1A":
+        if self.magic1 != b"\x1A":
             raise kaitaistruct.ValidationNotEqualError(b"\x1A", self.magic1, self._io, u"/seq/1")
         self._debug['file_type']['start'] = self._io.pos()
         self.file_type = self._io.read_u1()
@@ -73,7 +75,7 @@ class S3m(KaitaiStruct):
         self._debug['magic2']['start'] = self._io.pos()
         self.magic2 = self._io.read_bytes(4)
         self._debug['magic2']['end'] = self._io.pos()
-        if not self.magic2 == b"\x53\x43\x52\x4D":
+        if self.magic2 != b"\x53\x43\x52\x4D":
             raise kaitaistruct.ValidationNotEqualError(b"\x53\x43\x52\x4D", self.magic2, self._io, u"/seq/10")
         self._debug['global_volume']['start'] = self._io.pos()
         self.global_volume = self._io.read_u1()
@@ -106,7 +108,7 @@ class S3m(KaitaiStruct):
         self._debug['channels']['start'] = self._io.pos()
         self.channels = [None] * (32)
         for i in range(32):
-            if not 'arr' in self._debug['channels']:
+            if 'arr' not in self._debug['channels']:
                 self._debug['channels']['arr'] = []
             self._debug['channels']['arr'].append({'start': self._io.pos()})
             _t_channels = S3m.Channel(self._io, self, self._root)
@@ -121,7 +123,7 @@ class S3m(KaitaiStruct):
         self._debug['instruments']['start'] = self._io.pos()
         self.instruments = [None] * (self.num_instruments)
         for i in range(self.num_instruments):
-            if not 'arr' in self._debug['instruments']:
+            if 'arr' not in self._debug['instruments']:
                 self._debug['instruments']['arr'] = []
             self._debug['instruments']['arr'].append({'start': self._io.pos()})
             _t_instruments = S3m.InstrumentPtr(self._io, self, self._root)
@@ -133,7 +135,7 @@ class S3m(KaitaiStruct):
         self._debug['patterns']['start'] = self._io.pos()
         self.patterns = [None] * (self.num_patterns)
         for i in range(self.num_patterns):
-            if not 'arr' in self._debug['patterns']:
+            if 'arr' not in self._debug['patterns']:
                 self._debug['patterns']['arr'] = []
             self._debug['patterns']['arr'].append({'start': self._io.pos()})
             _t_patterns = S3m.PatternPtr(self._io, self, self._root)
@@ -146,7 +148,7 @@ class S3m(KaitaiStruct):
             self._debug['channel_pans']['start'] = self._io.pos()
             self.channel_pans = [None] * (32)
             for i in range(32):
-                if not 'arr' in self._debug['channel_pans']:
+                if 'arr' not in self._debug['channel_pans']:
                     self._debug['channel_pans']['arr'] = []
                 self._debug['channel_pans']['arr'].append({'start': self._io.pos()})
                 _t_channel_pans = S3m.ChannelPan(self._io, self, self._root)
@@ -242,7 +244,7 @@ class S3m(KaitaiStruct):
             self.cells = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['cells']:
+                if 'arr' not in self._debug['cells']:
                     self._debug['cells']['arr'] = []
                 self._debug['cells']['arr'].append({'start': self._io.pos()})
                 _t_cells = S3m.PatternCell(self._io, self, self._root)
@@ -401,10 +403,9 @@ class S3m(KaitaiStruct):
             _on = self.type
             if _on == S3m.Instrument.InstTypes.sample:
                 self.body = S3m.Instrument.Sampled(self._io, self, self._root)
-                self.body._read()
             else:
                 self.body = S3m.Instrument.Adlib(self._io, self, self._root)
-                self.body._read()
+            self.body._read()
             self._debug['body']['end'] = self._io.pos()
             self._debug['tuning_hz']['start'] = self._io.pos()
             self.tuning_hz = self._io.read_u4le()
@@ -418,7 +419,7 @@ class S3m(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x53\x43\x52\x53":
+            if self.magic != b"\x53\x43\x52\x53":
                 raise kaitaistruct.ValidationNotEqualError(b"\x53\x43\x52\x53", self.magic, self._io, u"/types/instrument/seq/6")
 
         class Sampled(KaitaiStruct):
@@ -482,7 +483,7 @@ class S3m(KaitaiStruct):
                 self._debug['reserved1']['start'] = self._io.pos()
                 self.reserved1 = self._io.read_bytes(3)
                 self._debug['reserved1']['end'] = self._io.pos()
-                if not self.reserved1 == b"\x00\x00\x00":
+                if self.reserved1 != b"\x00\x00\x00":
                     raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00", self.reserved1, self._io, u"/types/instrument/types/adlib/seq/0")
                 self._debug['_unnamed1']['start'] = self._io.pos()
                 self._unnamed1 = self._io.read_bytes(16)

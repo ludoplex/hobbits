@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Wmf(KaitaiStruct):
     """WMF (Windows Metafile) is a relatively early vector image format
@@ -140,7 +142,7 @@ class Wmf(KaitaiStruct):
         self.records = []
         i = 0
         while True:
-            if not 'arr' in self._debug['records']:
+            if 'arr' not in self._debug['records']:
                 self._debug['records']['arr'] = []
             self._debug['records']['arr'].append({'start': self._io.pos()})
             _t_records = Wmf.Record(self._io, self, self._root)
@@ -253,7 +255,7 @@ class Wmf(KaitaiStruct):
             self._debug['points']['start'] = self._io.pos()
             self.points = [None] * (self.num_points)
             for i in range(self.num_points):
-                if not 'arr' in self._debug['points']:
+                if 'arr' not in self._debug['points']:
                     self._debug['points']['arr'] = []
                 self._debug['points']['arr'].append({'start': self._io.pos()})
                 _t_points = Wmf.PointS(self._io, self, self._root)
@@ -382,7 +384,7 @@ class Wmf(KaitaiStruct):
             self._debug['points']['start'] = self._io.pos()
             self.points = [None] * (self.num_points)
             for i in range(self.num_points):
-                if not 'arr' in self._debug['points']:
+                if 'arr' not in self._debug['points']:
                     self._debug['points']['arr'] = []
                 self._debug['points']['arr'].append({'start': self._io.pos()})
                 _t_points = Wmf.PointS(self._io, self, self._root)
@@ -405,12 +407,12 @@ class Wmf(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\xD7\xCD\xC6\x9A":
+            if self.magic != b"\xD7\xCD\xC6\x9A":
                 raise kaitaistruct.ValidationNotEqualError(b"\xD7\xCD\xC6\x9A", self.magic, self._io, u"/types/special_header/seq/0")
             self._debug['handle']['start'] = self._io.pos()
             self.handle = self._io.read_bytes(2)
             self._debug['handle']['end'] = self._io.pos()
-            if not self.handle == b"\x00\x00":
+            if self.handle != b"\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00", self.handle, self._io, u"/types/special_header/seq/1")
             self._debug['left']['start'] = self._io.pos()
             self.left = self._io.read_s2le()
@@ -430,7 +432,7 @@ class Wmf(KaitaiStruct):
             self._debug['reserved']['start'] = self._io.pos()
             self.reserved = self._io.read_bytes(4)
             self._debug['reserved']['end'] = self._io.pos()
-            if not self.reserved == b"\x00\x00\x00\x00":
+            if self.reserved != b"\x00\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.reserved, self._io, u"/types/special_header/seq/7")
             self._debug['checksum']['start'] = self._io.pos()
             self.checksum = self._io.read_u2le()

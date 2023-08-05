@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class SaintsRow2VppPc(KaitaiStruct):
     SEQ_FIELDS = ["magic", "pad1", "num_files", "container_size", "len_offsets", "len_filenames", "len_extensions", "smth5", "smth6", "smth7", "smth8", "smth9"]
@@ -21,7 +23,7 @@ class SaintsRow2VppPc(KaitaiStruct):
         self._debug['magic']['start'] = self._io.pos()
         self.magic = self._io.read_bytes(5)
         self._debug['magic']['end'] = self._io.pos()
-        if not self.magic == b"\xCE\x0A\x89\x51\x04":
+        if self.magic != b"\xCE\x0A\x89\x51\x04":
             raise kaitaistruct.ValidationNotEqualError(b"\xCE\x0A\x89\x51\x04", self.magic, self._io, u"/seq/0")
         self._debug['pad1']['start'] = self._io.pos()
         self.pad1 = self._io.read_bytes(335)
@@ -70,7 +72,7 @@ class SaintsRow2VppPc(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = SaintsRow2VppPc.Offsets.Offset(self._io, self, self._root)
@@ -169,7 +171,7 @@ class SaintsRow2VppPc(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 self.entries.append((self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8"))

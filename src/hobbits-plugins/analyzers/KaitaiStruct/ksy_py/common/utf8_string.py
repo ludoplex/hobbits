@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Utf8String(KaitaiStruct):
     """UTF-8 is a popular character encoding scheme that allows to
@@ -41,7 +43,7 @@ class Utf8String(KaitaiStruct):
         self.codepoints = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['codepoints']:
+            if 'arr' not in self._debug['codepoints']:
                 self._debug['codepoints']['arr'] = []
             self._debug['codepoints']['arr'].append({'start': self._io.pos()})
             _t_codepoints = Utf8String.Utf8Codepoint(self._io, self, self._root)

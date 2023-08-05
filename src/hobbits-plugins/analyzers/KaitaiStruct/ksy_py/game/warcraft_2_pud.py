@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Warcraft2Pud(KaitaiStruct):
     """Warcraft II game engine uses this format for map files. External
@@ -155,7 +157,7 @@ class Warcraft2Pud(KaitaiStruct):
         self.sections = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['sections']:
+            if 'arr' not in self._debug['sections']:
                 self._debug['sections']['arr'] = []
             self._debug['sections']['arr'].append({'start': self._io.pos()})
             _t_sections = Warcraft2Pud.Section(self._io, self, self._root)
@@ -179,7 +181,7 @@ class Warcraft2Pud(KaitaiStruct):
             self.resources_by_player = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['resources_by_player']:
+                if 'arr' not in self._debug['resources_by_player']:
                     self._debug['resources_by_player']['arr'] = []
                 self._debug['resources_by_player']['arr'].append({'start': self._io.pos()})
                 self.resources_by_player.append(self._io.read_u2le())
@@ -253,7 +255,7 @@ class Warcraft2Pud(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(10)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00":
+            if self.magic != b"\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00", self.magic, self._io, u"/types/section_type/seq/0")
             self._debug['unused']['start'] = self._io.pos()
             self.unused = self._io.read_bytes(2)
@@ -276,7 +278,7 @@ class Warcraft2Pud(KaitaiStruct):
             self.units = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['units']:
+                if 'arr' not in self._debug['units']:
                     self._debug['units']['arr'] = []
                 self._debug['units']['arr'].append({'start': self._io.pos()})
                 _t_units = Warcraft2Pud.Unit(self._io, self, self._root)
@@ -374,7 +376,7 @@ class Warcraft2Pud(KaitaiStruct):
             self.controller_by_player = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['controller_by_player']:
+                if 'arr' not in self._debug['controller_by_player']:
                     self._debug['controller_by_player']['arr'] = []
                 self._debug['controller_by_player']['arr'].append({'start': self._io.pos()})
                 self.controller_by_player.append(KaitaiStream.resolve_enum(Warcraft2Pud.Controller, self._io.read_u1()))
@@ -414,7 +416,12 @@ class Warcraft2Pud(KaitaiStruct):
             if hasattr(self, '_m_resource'):
                 return self._m_resource if hasattr(self, '_m_resource') else None
 
-            if  ((self.u_type == Warcraft2Pud.UnitType.gold_mine) or (self.u_type == Warcraft2Pud.UnitType.human_oil_well) or (self.u_type == Warcraft2Pud.UnitType.orc_oil_well) or (self.u_type == Warcraft2Pud.UnitType.oil_patch)) :
+            if self.u_type in [
+                Warcraft2Pud.UnitType.gold_mine,
+                Warcraft2Pud.UnitType.human_oil_well,
+                Warcraft2Pud.UnitType.orc_oil_well,
+                Warcraft2Pud.UnitType.oil_patch,
+            ]:
                 self._m_resource = (self.options * 2500)
 
             return self._m_resource if hasattr(self, '_m_resource') else None

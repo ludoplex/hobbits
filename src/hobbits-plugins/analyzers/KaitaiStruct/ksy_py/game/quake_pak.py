@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class QuakePak(KaitaiStruct):
     """
@@ -25,7 +27,7 @@ class QuakePak(KaitaiStruct):
         self._debug['magic']['start'] = self._io.pos()
         self.magic = self._io.read_bytes(4)
         self._debug['magic']['end'] = self._io.pos()
-        if not self.magic == b"\x50\x41\x43\x4B":
+        if self.magic != b"\x50\x41\x43\x4B":
             raise kaitaistruct.ValidationNotEqualError(b"\x50\x41\x43\x4B", self.magic, self._io, u"/seq/0")
         self._debug['ofs_index']['start'] = self._io.pos()
         self.ofs_index = self._io.read_u4le()
@@ -47,7 +49,7 @@ class QuakePak(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = QuakePak.IndexEntry(self._io, self, self._root)

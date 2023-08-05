@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class RenderwareBinaryStream(KaitaiStruct):
     """
@@ -305,7 +307,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._debug['morph_targets']['start'] = self._io.pos()
             self.morph_targets = [None] * (self.num_morph_targets)
             for i in range(self.num_morph_targets):
-                if not 'arr' in self._debug['morph_targets']:
+                if 'arr' not in self._debug['morph_targets']:
                     self._debug['morph_targets']['arr'] = []
                 self._debug['morph_targets']['arr'].append({'start': self._io.pos()})
                 _t_morph_targets = RenderwareBinaryStream.MorphTarget(self._io, self, self._root)
@@ -361,7 +363,7 @@ class RenderwareBinaryStream(KaitaiStruct):
                 self._debug['prelit_colors']['start'] = self._io.pos()
                 self.prelit_colors = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    if not 'arr' in self._debug['prelit_colors']:
+                    if 'arr' not in self._debug['prelit_colors']:
                         self._debug['prelit_colors']['arr'] = []
                     self._debug['prelit_colors']['arr'].append({'start': self._io.pos()})
                     _t_prelit_colors = RenderwareBinaryStream.Rgba(self._io, self, self._root)
@@ -371,11 +373,11 @@ class RenderwareBinaryStream(KaitaiStruct):
 
                 self._debug['prelit_colors']['end'] = self._io.pos()
 
-            if  ((self._parent.is_textured) or (self._parent.is_textured2)) :
+            if ((self._parent.is_textured) or (self._parent.is_textured2)):
                 self._debug['tex_coords']['start'] = self._io.pos()
                 self.tex_coords = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    if not 'arr' in self._debug['tex_coords']:
+                    if 'arr' not in self._debug['tex_coords']:
                         self._debug['tex_coords']['arr'] = []
                     self._debug['tex_coords']['arr'].append({'start': self._io.pos()})
                     _t_tex_coords = RenderwareBinaryStream.TexCoord(self._io, self, self._root)
@@ -388,7 +390,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._debug['triangles']['start'] = self._io.pos()
             self.triangles = [None] * (self._parent.num_triangles)
             for i in range(self._parent.num_triangles):
-                if not 'arr' in self._debug['triangles']:
+                if 'arr' not in self._debug['triangles']:
                     self._debug['triangles']['arr'] = []
                 self._debug['triangles']['arr'].append({'start': self._io.pos()})
                 _t_triangles = RenderwareBinaryStream.Triangle(self._io, self, self._root)
@@ -486,7 +488,7 @@ class RenderwareBinaryStream(KaitaiStruct):
                 self._debug['vertices']['start'] = self._io.pos()
                 self.vertices = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    if not 'arr' in self._debug['vertices']:
+                    if 'arr' not in self._debug['vertices']:
                         self._debug['vertices']['arr'] = []
                     self._debug['vertices']['arr'].append({'start': self._io.pos()})
                     _t_vertices = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
@@ -500,7 +502,7 @@ class RenderwareBinaryStream(KaitaiStruct):
                 self._debug['normals']['start'] = self._io.pos()
                 self.normals = [None] * (self._parent.num_vertices)
                 for i in range(self._parent.num_vertices):
-                    if not 'arr' in self._debug['normals']:
+                    if 'arr' not in self._debug['normals']:
                         self._debug['normals']['arr'] = []
                     self._debug['normals']['arr'].append({'start': self._io.pos()})
                     _t_normals = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
@@ -555,7 +557,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._debug['frames']['start'] = self._io.pos()
             self.frames = [None] * (self.num_frames)
             for i in range(self.num_frames):
-                if not 'arr' in self._debug['frames']:
+                if 'arr' not in self._debug['frames']:
                     self._debug['frames']['arr'] = []
                 self._debug['frames']['arr'].append({'start': self._io.pos()})
                 _t_frames = RenderwareBinaryStream.Frame(self._io, self, self._root)
@@ -582,7 +584,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._debug['entries']['start'] = self._io.pos()
             self.entries = [None] * (3)
             for i in range(3):
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = RenderwareBinaryStream.Vector3d(self._io, self, self._root)
@@ -636,7 +638,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self._debug['code']['start'] = self._io.pos()
             self.code = self._io.read_bytes(4)
             self._debug['code']['end'] = self._io.pos()
-            if not self.code == b"\x01\x00\x00\x00":
+            if self.code != b"\x01\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x01\x00\x00\x00", self.code, self._io, u"/types/list_with_header/seq/0")
             self._debug['header_size']['start'] = self._io.pos()
             self.header_size = self._io.read_u4le()
@@ -678,7 +680,7 @@ class RenderwareBinaryStream(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = RenderwareBinaryStream(self._io)

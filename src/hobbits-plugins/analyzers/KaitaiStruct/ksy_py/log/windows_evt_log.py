@@ -8,7 +8,9 @@ from enum import Enum
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class WindowsEvtLog(KaitaiStruct):
     """EVT files are Windows Event Log files written by older Windows
@@ -52,7 +54,7 @@ class WindowsEvtLog(KaitaiStruct):
         self.records = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['records']:
+            if 'arr' not in self._debug['records']:
                 self._debug['records']['arr'] = []
             self._debug['records']['arr'].append({'start': self._io.pos()})
             _t_records = WindowsEvtLog.Record(self._io, self, self._root)
@@ -82,7 +84,7 @@ class WindowsEvtLog(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(4)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x4C\x66\x4C\x65":
+            if self.magic != b"\x4C\x66\x4C\x65":
                 raise kaitaistruct.ValidationNotEqualError(b"\x4C\x66\x4C\x65", self.magic, self._io, u"/types/header/seq/1")
             self._debug['version_major']['start'] = self._io.pos()
             self.version_major = self._io.read_u4le()
@@ -285,7 +287,7 @@ class WindowsEvtLog(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(12)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44":
+            if self.magic != b"\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44":
                 raise kaitaistruct.ValidationNotEqualError(b"\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", self.magic, self._io, u"/types/cursor_record_body/seq/0")
             self._debug['ofs_first_record']['start'] = self._io.pos()
             self.ofs_first_record = self._io.read_u4le()

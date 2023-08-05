@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class TrDosImage(KaitaiStruct):
     """.trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
@@ -48,7 +50,7 @@ class TrDosImage(KaitaiStruct):
         self.files = []
         i = 0
         while True:
-            if not 'arr' in self._debug['files']:
+            if 'arr' not in self._debug['files']:
                 self._debug['files']['arr'] = []
             self._debug['files']['arr'].append({'start': self._io.pos()})
             _t_files = TrDosImage.File(self._io, self, self._root)
@@ -73,7 +75,7 @@ class TrDosImage(KaitaiStruct):
             self._debug['catalog_end']['start'] = self._io.pos()
             self.catalog_end = self._io.read_bytes(1)
             self._debug['catalog_end']['end'] = self._io.pos()
-            if not self.catalog_end == b"\x00":
+            if self.catalog_end != b"\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00", self.catalog_end, self._io, u"/types/volume_info/seq/0")
             self._debug['unused']['start'] = self._io.pos()
             self.unused = self._io.read_bytes(224)
@@ -96,7 +98,7 @@ class TrDosImage(KaitaiStruct):
             self._debug['tr_dos_id']['start'] = self._io.pos()
             self.tr_dos_id = self._io.read_bytes(1)
             self._debug['tr_dos_id']['end'] = self._io.pos()
-            if not self.tr_dos_id == b"\x10":
+            if self.tr_dos_id != b"\x10":
                 raise kaitaistruct.ValidationNotEqualError(b"\x10", self.tr_dos_id, self._io, u"/types/volume_info/seq/7")
             self._debug['unused_2']['start'] = self._io.pos()
             self.unused_2 = self._io.read_bytes(2)
@@ -254,16 +256,13 @@ class TrDosImage(KaitaiStruct):
             _on = self.extension
             if _on == 66:
                 self.position_and_length = TrDosImage.PositionAndLengthBasic(self._io, self, self._root)
-                self.position_and_length._read()
             elif _on == 67:
                 self.position_and_length = TrDosImage.PositionAndLengthCode(self._io, self, self._root)
-                self.position_and_length._read()
             elif _on == 35:
                 self.position_and_length = TrDosImage.PositionAndLengthPrint(self._io, self, self._root)
-                self.position_and_length._read()
             else:
                 self.position_and_length = TrDosImage.PositionAndLengthGeneric(self._io, self, self._root)
-                self.position_and_length._read()
+            self.position_and_length._read()
             self._debug['position_and_length']['end'] = self._io.pos()
             self._debug['length_sectors']['start'] = self._io.pos()
             self.length_sectors = self._io.read_u1()

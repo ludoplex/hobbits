@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Ogg(KaitaiStruct):
     """Ogg is a popular media container format, which provides basic
@@ -32,7 +34,7 @@ class Ogg(KaitaiStruct):
         self.pages = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['pages']:
+            if 'arr' not in self._debug['pages']:
                 self._debug['pages']['arr'] = []
             self._debug['pages']['arr'].append({'start': self._io.pos()})
             _t_pages = Ogg.Page(self._io, self, self._root)
@@ -58,12 +60,12 @@ class Ogg(KaitaiStruct):
             self._debug['sync_code']['start'] = self._io.pos()
             self.sync_code = self._io.read_bytes(4)
             self._debug['sync_code']['end'] = self._io.pos()
-            if not self.sync_code == b"\x4F\x67\x67\x53":
+            if self.sync_code != b"\x4F\x67\x67\x53":
                 raise kaitaistruct.ValidationNotEqualError(b"\x4F\x67\x67\x53", self.sync_code, self._io, u"/types/page/seq/0")
             self._debug['version']['start'] = self._io.pos()
             self.version = self._io.read_bytes(1)
             self._debug['version']['end'] = self._io.pos()
-            if not self.version == b"\x00":
+            if self.version != b"\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00", self.version, self._io, u"/types/page/seq/1")
             self._debug['reserved1']['start'] = self._io.pos()
             self.reserved1 = self._io.read_bits_int_be(5)
@@ -96,7 +98,7 @@ class Ogg(KaitaiStruct):
             self._debug['len_segments']['start'] = self._io.pos()
             self.len_segments = [None] * (self.num_segments)
             for i in range(self.num_segments):
-                if not 'arr' in self._debug['len_segments']:
+                if 'arr' not in self._debug['len_segments']:
                     self._debug['len_segments']['arr'] = []
                 self._debug['len_segments']['arr'].append({'start': self._io.pos()})
                 self.len_segments[i] = self._io.read_u1()
@@ -106,7 +108,7 @@ class Ogg(KaitaiStruct):
             self._debug['segments']['start'] = self._io.pos()
             self.segments = [None] * (self.num_segments)
             for i in range(self.num_segments):
-                if not 'arr' in self._debug['segments']:
+                if 'arr' not in self._debug['segments']:
                     self._debug['segments']['arr'] = []
                 self._debug['segments']['arr'].append({'start': self._io.pos()})
                 self.segments[i] = self._io.read_bytes(self.len_segments[i])

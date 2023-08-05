@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import vlq_base128_be
 class Sqlite3(KaitaiStruct):
@@ -49,7 +51,10 @@ class Sqlite3(KaitaiStruct):
         self._debug['magic']['start'] = self._io.pos()
         self.magic = self._io.read_bytes(16)
         self._debug['magic']['end'] = self._io.pos()
-        if not self.magic == b"\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00":
+        if (
+            self.magic
+            != b"\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00"
+        ):
             raise kaitaistruct.ValidationNotEqualError(b"\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00", self.magic, self._io, u"/seq/0")
         self._debug['len_page_mod']['start'] = self._io.pos()
         self.len_page_mod = self._io.read_u2be()
@@ -187,7 +192,7 @@ class Sqlite3(KaitaiStruct):
             self._debug['num_frag_free_bytes']['start'] = self._io.pos()
             self.num_frag_free_bytes = self._io.read_u1()
             self._debug['num_frag_free_bytes']['end'] = self._io.pos()
-            if  ((self.page_type == 2) or (self.page_type == 5)) :
+            if self.page_type in [2, 5]:
                 self._debug['right_ptr']['start'] = self._io.pos()
                 self.right_ptr = self._io.read_u4be()
                 self._debug['right_ptr']['end'] = self._io.pos()
@@ -195,7 +200,7 @@ class Sqlite3(KaitaiStruct):
             self._debug['cells']['start'] = self._io.pos()
             self.cells = [None] * (self.num_cells)
             for i in range(self.num_cells):
-                if not 'arr' in self._debug['cells']:
+                if 'arr' not in self._debug['cells']:
                     self._debug['cells']['arr'] = []
                 self._debug['cells']['arr'].append({'start': self._io.pos()})
                 _t_cells = Sqlite3.RefCell(self._io, self, self._root)
@@ -244,7 +249,7 @@ class Sqlite3(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = vlq_base128_be.VlqBase128Be(self._io)
@@ -311,7 +316,7 @@ class Sqlite3(KaitaiStruct):
             self._debug['column_contents']['start'] = self._io.pos()
             self.column_contents = [None] * (len(self.column_serials.entries))
             for i in range(len(self.column_serials.entries)):
-                if not 'arr' in self._debug['column_contents']:
+                if 'arr' not in self._debug['column_contents']:
                     self._debug['column_contents']['arr'] = []
                 self._debug['column_contents']['arr'].append({'start': self._io.pos()})
                 _t_column_contents = Sqlite3.ColumnContent(self.column_serials.entries[i], self._io, self, self._root)

@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Rar(KaitaiStruct):
     """RAR is a archive format used by popular proprietary RAR archiver,
@@ -67,12 +69,12 @@ class Rar(KaitaiStruct):
         self.blocks = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['blocks']:
+            if 'arr' not in self._debug['blocks']:
                 self._debug['blocks']['arr'] = []
             self._debug['blocks']['arr'].append({'start': self._io.pos()})
             _on = self.magic.version
             if _on == 0:
-                if not 'arr' in self._debug['blocks']:
+                if 'arr' not in self._debug['blocks']:
                     self._debug['blocks']['arr'] = []
                 self._debug['blocks']['arr'].append({'start': self._io.pos()})
                 _t_blocks = Rar.Block(self._io, self, self._root)
@@ -80,7 +82,7 @@ class Rar(KaitaiStruct):
                 self.blocks.append(_t_blocks)
                 self._debug['blocks']['arr'][len(self.blocks) - 1]['end'] = self._io.pos()
             elif _on == 1:
-                if not 'arr' in self._debug['blocks']:
+                if 'arr' not in self._debug['blocks']:
                     self._debug['blocks']['arr'] = []
                 self._debug['blocks']['arr'].append({'start': self._io.pos()})
                 _t_blocks = Rar.BlockV5(self._io, self, self._root)
@@ -245,7 +247,7 @@ class Rar(KaitaiStruct):
             self._debug['magic1']['start'] = self._io.pos()
             self.magic1 = self._io.read_bytes(6)
             self._debug['magic1']['end'] = self._io.pos()
-            if not self.magic1 == b"\x52\x61\x72\x21\x1A\x07":
+            if self.magic1 != b"\x52\x61\x72\x21\x1A\x07":
                 raise kaitaistruct.ValidationNotEqualError(b"\x52\x61\x72\x21\x1A\x07", self.magic1, self._io, u"/types/magic_signature/seq/0")
             self._debug['version']['start'] = self._io.pos()
             self.version = self._io.read_u1()
@@ -254,7 +256,7 @@ class Rar(KaitaiStruct):
                 self._debug['magic3']['start'] = self._io.pos()
                 self.magic3 = self._io.read_bytes(1)
                 self._debug['magic3']['end'] = self._io.pos()
-                if not self.magic3 == b"\x00":
+                if self.magic3 != b"\x00":
                     raise kaitaistruct.ValidationNotEqualError(b"\x00", self.magic3, self._io, u"/types/magic_signature/seq/2")
 
 

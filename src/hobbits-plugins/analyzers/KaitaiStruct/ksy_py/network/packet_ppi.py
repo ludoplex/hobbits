@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import ethernet_frame
 class PacketPpi(KaitaiStruct):
@@ -183,7 +185,7 @@ class PacketPpi(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = PacketPpi.PacketPpiField(self._io, self, self._root)
@@ -407,7 +409,7 @@ class PacketPpi(KaitaiStruct):
             self._debug['rssi_ant_ctl']['start'] = self._io.pos()
             self.rssi_ant_ctl = [None] * (4)
             for i in range(4):
-                if not 'arr' in self._debug['rssi_ant_ctl']:
+                if 'arr' not in self._debug['rssi_ant_ctl']:
                     self._debug['rssi_ant_ctl']['arr'] = []
                 self._debug['rssi_ant_ctl']['arr'].append({'start': self._io.pos()})
                 self.rssi_ant_ctl[i] = self._io.read_u1()
@@ -417,7 +419,7 @@ class PacketPpi(KaitaiStruct):
             self._debug['rssi_ant_ext']['start'] = self._io.pos()
             self.rssi_ant_ext = [None] * (4)
             for i in range(4):
-                if not 'arr' in self._debug['rssi_ant_ext']:
+                if 'arr' not in self._debug['rssi_ant_ext']:
                     self._debug['rssi_ant_ext']['arr'] = []
                 self._debug['rssi_ant_ext']['arr'].append({'start': self._io.pos()})
                 self.rssi_ant_ext[i] = self._io.read_u1()
@@ -434,7 +436,7 @@ class PacketPpi(KaitaiStruct):
             self._debug['rf_signal_noise']['start'] = self._io.pos()
             self.rf_signal_noise = [None] * (4)
             for i in range(4):
-                if not 'arr' in self._debug['rf_signal_noise']:
+                if 'arr' not in self._debug['rf_signal_noise']:
                     self._debug['rf_signal_noise']['arr'] = []
                 self._debug['rf_signal_noise']['arr'].append({'start': self._io.pos()})
                 _t_rf_signal_noise = PacketPpi.Radio80211nMacPhyExtBody.SignalNoise(self._io, self, self._root)
@@ -446,7 +448,7 @@ class PacketPpi(KaitaiStruct):
             self._debug['evm']['start'] = self._io.pos()
             self.evm = [None] * (4)
             for i in range(4):
-                if not 'arr' in self._debug['evm']:
+                if 'arr' not in self._debug['evm']:
                     self._debug['evm']['arr'] = []
                 self._debug['evm']['arr'].append({'start': self._io.pos()})
                 self.evm[i] = self._io.read_u4le()

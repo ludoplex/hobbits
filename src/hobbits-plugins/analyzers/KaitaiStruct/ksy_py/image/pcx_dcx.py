@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import pcx
 class PcxDcx(KaitaiStruct):
@@ -27,13 +29,13 @@ class PcxDcx(KaitaiStruct):
         self._debug['magic']['start'] = self._io.pos()
         self.magic = self._io.read_bytes(4)
         self._debug['magic']['end'] = self._io.pos()
-        if not self.magic == b"\xB1\x68\xDE\x3A":
+        if self.magic != b"\xB1\x68\xDE\x3A":
             raise kaitaistruct.ValidationNotEqualError(b"\xB1\x68\xDE\x3A", self.magic, self._io, u"/seq/0")
         self._debug['files']['start'] = self._io.pos()
         self.files = []
         i = 0
         while True:
-            if not 'arr' in self._debug['files']:
+            if 'arr' not in self._debug['files']:
                 self._debug['files']['arr'] = []
             self._debug['files']['arr'].append({'start': self._io.pos()})
             _t_files = PcxDcx.PcxOffset(self._io, self, self._root)

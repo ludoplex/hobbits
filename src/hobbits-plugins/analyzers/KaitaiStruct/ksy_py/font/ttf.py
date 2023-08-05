@@ -8,7 +8,9 @@ from enum import Enum
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Ttf(KaitaiStruct):
     """A TrueType font file contains data, in table format, that comprises
@@ -32,7 +34,7 @@ class Ttf(KaitaiStruct):
         self._debug['directory_table']['start'] = self._io.pos()
         self.directory_table = [None] * (self.offset_table.num_tables)
         for i in range(self.offset_table.num_tables):
-            if not 'arr' in self._debug['directory_table']:
+            if 'arr' not in self._debug['directory_table']:
                 self._debug['directory_table']['arr'] = []
             self._debug['directory_table']['arr'].append({'start': self._io.pos()})
             _t_directory_table = Ttf.DirTableEntry(self._io, self, self._root)
@@ -102,7 +104,7 @@ class Ttf(KaitaiStruct):
                 self._debug['glyph_name_index']['start'] = self._io.pos()
                 self.glyph_name_index = [None] * (self.number_of_glyphs)
                 for i in range(self.number_of_glyphs):
-                    if not 'arr' in self._debug['glyph_name_index']:
+                    if 'arr' not in self._debug['glyph_name_index']:
                         self._debug['glyph_name_index']['arr'] = []
                     self._debug['glyph_name_index']['arr'].append({'start': self._io.pos()})
                     self.glyph_name_index[i] = self._io.read_u2be()
@@ -113,7 +115,7 @@ class Ttf(KaitaiStruct):
                 self.glyph_names = []
                 i = 0
                 while True:
-                    if not 'arr' in self._debug['glyph_names']:
+                    if 'arr' not in self._debug['glyph_names']:
                         self._debug['glyph_names']['arr'] = []
                     self._debug['glyph_names']['arr'].append({'start': self._io.pos()})
                     _t_glyph_names = Ttf.Post.Format20.PascalString(self._io, self, self._root)
@@ -206,7 +208,7 @@ class Ttf(KaitaiStruct):
             self._debug['name_records']['start'] = self._io.pos()
             self.name_records = [None] * (self.num_name_records)
             for i in range(self.num_name_records):
-                if not 'arr' in self._debug['name_records']:
+                if 'arr' not in self._debug['name_records']:
                     self._debug['name_records']['arr'] = []
                 self._debug['name_records']['arr'].append({'start': self._io.pos()})
                 _t_name_records = Ttf.Name.NameRecord(self._io, self, self._root)
@@ -309,7 +311,7 @@ class Ttf(KaitaiStruct):
             self._debug['magic_number']['start'] = self._io.pos()
             self.magic_number = self._io.read_bytes(4)
             self._debug['magic_number']['end'] = self._io.pos()
-            if not self.magic_number == b"\x5F\x0F\x3C\xF5":
+            if self.magic_number != b"\x5F\x0F\x3C\xF5":
                 raise kaitaistruct.ValidationNotEqualError(b"\x5F\x0F\x3C\xF5", self.magic_number, self._io, u"/types/head/seq/3")
             self._debug['flags']['start'] = self._io.pos()
             self.flags = KaitaiStream.resolve_enum(Ttf.Head.Flags, self._io.read_u2be())
@@ -409,7 +411,7 @@ class Ttf(KaitaiStruct):
             self._debug['reserved']['start'] = self._io.pos()
             self.reserved = self._io.read_bytes(10)
             self._debug['reserved']['end'] = self._io.pos()
-            if not self.reserved == b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00":
+            if self.reserved != b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", self.reserved, self._io, u"/types/hhea/seq/10")
             self._debug['metric_data_format']['start'] = self._io.pos()
             self.metric_data_format = self._io.read_s2be()
@@ -451,7 +453,7 @@ class Ttf(KaitaiStruct):
             self._debug['subtables']['start'] = self._io.pos()
             self.subtables = [None] * (self.subtable_count)
             for i in range(self.subtable_count):
-                if not 'arr' in self._debug['subtables']:
+                if 'arr' not in self._debug['subtables']:
                     self._debug['subtables']['arr'] = []
                 self._debug['subtables']['arr'].append({'start': self._io.pos()})
                 _t_subtables = Ttf.Kern.Subtable(self._io, self, self._root)
@@ -526,7 +528,7 @@ class Ttf(KaitaiStruct):
                     self._debug['kerning_pairs']['start'] = self._io.pos()
                     self.kerning_pairs = [None] * (self.pair_count)
                     for i in range(self.pair_count):
-                        if not 'arr' in self._debug['kerning_pairs']:
+                        if 'arr' not in self._debug['kerning_pairs']:
                             self._debug['kerning_pairs']['arr'] = []
                         self._debug['kerning_pairs']['arr'].append({'start': self._io.pos()})
                         _t_kerning_pairs = Ttf.Kern.Subtable.Format0.KerningPair(self._io, self, self._root)
@@ -1371,7 +1373,7 @@ class Ttf(KaitaiStruct):
                 self._debug['end_pts_of_contours']['start'] = self._io.pos()
                 self.end_pts_of_contours = [None] * (self._parent.number_of_contours)
                 for i in range(self._parent.number_of_contours):
-                    if not 'arr' in self._debug['end_pts_of_contours']:
+                    if 'arr' not in self._debug['end_pts_of_contours']:
                         self._debug['end_pts_of_contours']['arr'] = []
                     self._debug['end_pts_of_contours']['arr'].append({'start': self._io.pos()})
                     self.end_pts_of_contours[i] = self._io.read_u2be()
@@ -1387,7 +1389,7 @@ class Ttf(KaitaiStruct):
                 self._debug['flags']['start'] = self._io.pos()
                 self.flags = [None] * (self.point_count)
                 for i in range(self.point_count):
-                    if not 'arr' in self._debug['flags']:
+                    if 'arr' not in self._debug['flags']:
                         self._debug['flags']['arr'] = []
                     self._debug['flags']['arr'].append({'start': self._io.pos()})
                     _t_flags = Ttf.Glyf.SimpleGlyph.Flag(self._io, self, self._root)
@@ -1460,7 +1462,7 @@ class Ttf(KaitaiStruct):
             self.fwords = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['fwords']:
+                if 'arr' not in self._debug['fwords']:
                     self._debug['fwords']['arr'] = []
                 self._debug['fwords']['arr'].append({'start': self._io.pos()})
                 self.fwords.append(self._io.read_s2be())
@@ -1574,7 +1576,7 @@ class Ttf(KaitaiStruct):
             self._debug['tables']['start'] = self._io.pos()
             self.tables = [None] * (self.number_of_encoding_tables)
             for i in range(self.number_of_encoding_tables):
-                if not 'arr' in self._debug['tables']:
+                if 'arr' not in self._debug['tables']:
                     self._debug['tables']['arr'] = []
                 self._debug['tables']['arr'].append({'start': self._io.pos()})
                 _t_tables = Ttf.Cmap.SubtableHeader(self._io, self, self._root)
@@ -1695,7 +1697,7 @@ class Ttf(KaitaiStruct):
                     self._debug['sub_header_keys']['start'] = self._io.pos()
                     self.sub_header_keys = [None] * (256)
                     for i in range(256):
-                        if not 'arr' in self._debug['sub_header_keys']:
+                        if 'arr' not in self._debug['sub_header_keys']:
                             self._debug['sub_header_keys']['arr'] = []
                         self._debug['sub_header_keys']['arr'].append({'start': self._io.pos()})
                         self.sub_header_keys[i] = self._io.read_u2be()
@@ -1728,7 +1730,7 @@ class Ttf(KaitaiStruct):
                     self._debug['end_count']['start'] = self._io.pos()
                     self.end_count = [None] * (self.seg_count)
                     for i in range(self.seg_count):
-                        if not 'arr' in self._debug['end_count']:
+                        if 'arr' not in self._debug['end_count']:
                             self._debug['end_count']['arr'] = []
                         self._debug['end_count']['arr'].append({'start': self._io.pos()})
                         self.end_count[i] = self._io.read_u2be()
@@ -1741,7 +1743,7 @@ class Ttf(KaitaiStruct):
                     self._debug['start_count']['start'] = self._io.pos()
                     self.start_count = [None] * (self.seg_count)
                     for i in range(self.seg_count):
-                        if not 'arr' in self._debug['start_count']:
+                        if 'arr' not in self._debug['start_count']:
                             self._debug['start_count']['arr'] = []
                         self._debug['start_count']['arr'].append({'start': self._io.pos()})
                         self.start_count[i] = self._io.read_u2be()
@@ -1751,7 +1753,7 @@ class Ttf(KaitaiStruct):
                     self._debug['id_delta']['start'] = self._io.pos()
                     self.id_delta = [None] * (self.seg_count)
                     for i in range(self.seg_count):
-                        if not 'arr' in self._debug['id_delta']:
+                        if 'arr' not in self._debug['id_delta']:
                             self._debug['id_delta']['arr'] = []
                         self._debug['id_delta']['arr'].append({'start': self._io.pos()})
                         self.id_delta[i] = self._io.read_u2be()
@@ -1761,7 +1763,7 @@ class Ttf(KaitaiStruct):
                     self._debug['id_range_offset']['start'] = self._io.pos()
                     self.id_range_offset = [None] * (self.seg_count)
                     for i in range(self.seg_count):
-                        if not 'arr' in self._debug['id_range_offset']:
+                        if 'arr' not in self._debug['id_range_offset']:
                             self._debug['id_range_offset']['arr'] = []
                         self._debug['id_range_offset']['arr'].append({'start': self._io.pos()})
                         self.id_range_offset[i] = self._io.read_u2be()
@@ -1772,7 +1774,7 @@ class Ttf(KaitaiStruct):
                     self.glyph_id_array = []
                     i = 0
                     while not self._io.is_eof():
-                        if not 'arr' in self._debug['glyph_id_array']:
+                        if 'arr' not in self._debug['glyph_id_array']:
                             self._debug['glyph_id_array']['arr'] = []
                         self._debug['glyph_id_array']['arr'].append({'start': self._io.pos()})
                         self.glyph_id_array.append(self._io.read_u2be())
@@ -1808,7 +1810,7 @@ class Ttf(KaitaiStruct):
                     self._debug['glyph_id_array']['start'] = self._io.pos()
                     self.glyph_id_array = [None] * (self.entry_count)
                     for i in range(self.entry_count):
-                        if not 'arr' in self._debug['glyph_id_array']:
+                        if 'arr' not in self._debug['glyph_id_array']:
                             self._debug['glyph_id_array']['arr'] = []
                         self._debug['glyph_id_array']['arr'].append({'start': self._io.pos()})
                         self.glyph_id_array[i] = self._io.read_u2be()

@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import bytes_with_io
 class PcfFont(KaitaiStruct):
@@ -50,7 +52,7 @@ class PcfFont(KaitaiStruct):
         self._debug['magic']['start'] = self._io.pos()
         self.magic = self._io.read_bytes(4)
         self._debug['magic']['end'] = self._io.pos()
-        if not self.magic == b"\x01\x66\x63\x70":
+        if self.magic != b"\x01\x66\x63\x70":
             raise kaitaistruct.ValidationNotEqualError(b"\x01\x66\x63\x70", self.magic, self._io, u"/seq/0")
         self._debug['num_tables']['start'] = self._io.pos()
         self.num_tables = self._io.read_u4le()
@@ -58,7 +60,7 @@ class PcfFont(KaitaiStruct):
         self._debug['tables']['start'] = self._io.pos()
         self.tables = [None] * (self.num_tables)
         for i in range(self.num_tables):
-            if not 'arr' in self._debug['tables']:
+            if 'arr' not in self._debug['tables']:
                 self._debug['tables']['arr'] = []
             self._debug['tables']['arr'].append({'start': self._io.pos()})
             _t_tables = PcfFont.Table(self._io, self, self._root)
@@ -119,7 +121,7 @@ class PcfFont(KaitaiStruct):
                 self._debug['swidths']['start'] = self._io.pos()
                 self.swidths = [None] * (self.num_glyphs)
                 for i in range(self.num_glyphs):
-                    if not 'arr' in self._debug['swidths']:
+                    if 'arr' not in self._debug['swidths']:
                         self._debug['swidths']['arr'] = []
                     self._debug['swidths']['arr'].append({'start': self._io.pos()})
                     self.swidths[i] = self._io.read_u4le()
@@ -153,7 +155,7 @@ class PcfFont(KaitaiStruct):
                 self._debug['props']['start'] = self._io.pos()
                 self.props = [None] * (self.num_props)
                 for i in range(self.num_props):
-                    if not 'arr' in self._debug['props']:
+                    if 'arr' not in self._debug['props']:
                         self._debug['props']['arr'] = []
                     self._debug['props']['arr'].append({'start': self._io.pos()})
                     _t_props = PcfFont.Table.Properties.Prop(self._io, self, self._root)
@@ -294,7 +296,7 @@ class PcfFont(KaitaiStruct):
                 self._debug['glyph_indexes']['start'] = self._io.pos()
                 self.glyph_indexes = [None] * ((((self.max_char_or_byte2 - self.min_char_or_byte2) + 1) * ((self.max_byte1 - self.min_byte1) + 1)))
                 for i in range((((self.max_char_or_byte2 - self.min_char_or_byte2) + 1) * ((self.max_byte1 - self.min_byte1) + 1))):
-                    if not 'arr' in self._debug['glyph_indexes']:
+                    if 'arr' not in self._debug['glyph_indexes']:
                         self._debug['glyph_indexes']['arr'] = []
                     self._debug['glyph_indexes']['arr'].append({'start': self._io.pos()})
                     self.glyph_indexes[i] = self._io.read_u2le()
@@ -327,7 +329,7 @@ class PcfFont(KaitaiStruct):
                 self._debug['names']['start'] = self._io.pos()
                 self.names = [None] * (self.num_glyphs)
                 for i in range(self.num_glyphs):
-                    if not 'arr' in self._debug['names']:
+                    if 'arr' not in self._debug['names']:
                         self._debug['names']['arr'] = []
                     self._debug['names']['arr'].append({'start': self._io.pos()})
                     _t_names = PcfFont.Table.GlyphNames.StringRef(self._io, self, self._root)
@@ -399,7 +401,7 @@ class PcfFont(KaitaiStruct):
                 self._debug['offsets']['start'] = self._io.pos()
                 self.offsets = [None] * (self.num_glyphs)
                 for i in range(self.num_glyphs):
-                    if not 'arr' in self._debug['offsets']:
+                    if 'arr' not in self._debug['offsets']:
                         self._debug['offsets']['arr'] = []
                     self._debug['offsets']['arr'].append({'start': self._io.pos()})
                     self.offsets[i] = self._io.read_u4le()
@@ -409,7 +411,7 @@ class PcfFont(KaitaiStruct):
                 self._debug['bitmap_sizes']['start'] = self._io.pos()
                 self.bitmap_sizes = [None] * (4)
                 for i in range(4):
-                    if not 'arr' in self._debug['bitmap_sizes']:
+                    if 'arr' not in self._debug['bitmap_sizes']:
                         self._debug['bitmap_sizes']['arr'] = []
                     self._debug['bitmap_sizes']['arr'].append({'start': self._io.pos()})
                     self.bitmap_sizes[i] = self._io.read_u4le()

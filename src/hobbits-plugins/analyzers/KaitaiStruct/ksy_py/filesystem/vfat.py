@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Vfat(KaitaiStruct):
     SEQ_FIELDS = ["boot_sector"]
@@ -49,7 +51,7 @@ class Vfat(KaitaiStruct):
             self._debug['reserved2']['start'] = self._io.pos()
             self.reserved2 = self._io.read_bytes(1)
             self._debug['reserved2']['end'] = self._io.pos()
-            if not self.reserved2 == b"\x00":
+            if self.reserved2 != b"\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00", self.reserved2, self._io, u"/types/ext_bios_param_block_fat32/seq/4")
             self._debug['fat_version']['start'] = self._io.pos()
             self.fat_version = self._io.read_u2le()
@@ -280,7 +282,7 @@ class Vfat(KaitaiStruct):
             self._debug['records']['start'] = self._io.pos()
             self.records = [None] * (self._root.boot_sector.bpb.max_root_dir_rec)
             for i in range(self._root.boot_sector.bpb.max_root_dir_rec):
-                if not 'arr' in self._debug['records']:
+                if 'arr' not in self._debug['records']:
                     self._debug['records']['arr'] = []
                 self._debug['records']['arr'].append({'start': self._io.pos()})
                 _t_records = Vfat.RootDirectoryRec(self._io, self, self._root)
@@ -333,7 +335,7 @@ class Vfat(KaitaiStruct):
         self._debug['_m_fats']['start'] = self._io.pos()
         self._m_fats = [None] * (self.boot_sector.bpb.num_fats)
         for i in range(self.boot_sector.bpb.num_fats):
-            if not 'arr' in self._debug['_m_fats']:
+            if 'arr' not in self._debug['_m_fats']:
                 self._debug['_m_fats']['arr'] = []
             self._debug['_m_fats']['arr'].append({'start': self._io.pos()})
             self._m_fats[i] = self._io.read_bytes(self.boot_sector.size_fat)

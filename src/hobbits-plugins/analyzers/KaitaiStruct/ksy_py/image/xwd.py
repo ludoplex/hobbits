@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Xwd(KaitaiStruct):
     """xwd is a file format written by eponymous X11 screen capture
@@ -59,7 +61,7 @@ class Xwd(KaitaiStruct):
         self._raw_color_map = [None] * (self.hdr.color_map_entries)
         self.color_map = [None] * (self.hdr.color_map_entries)
         for i in range(self.hdr.color_map_entries):
-            if not 'arr' in self._debug['color_map']:
+            if 'arr' not in self._debug['color_map']:
                 self._debug['color_map']['arr'] = []
             self._debug['color_map']['arr'].append({'start': self._io.pos()})
             self._raw_color_map[i] = self._io.read_bytes(12)

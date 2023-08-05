@@ -9,7 +9,9 @@ import zlib
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Png(KaitaiStruct):
 
@@ -37,17 +39,17 @@ class Png(KaitaiStruct):
         self._debug['magic']['start'] = self._io.pos()
         self.magic = self._io.read_bytes(8)
         self._debug['magic']['end'] = self._io.pos()
-        if not self.magic == b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A":
+        if self.magic != b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A":
             raise kaitaistruct.ValidationNotEqualError(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", self.magic, self._io, u"/seq/0")
         self._debug['ihdr_len']['start'] = self._io.pos()
         self.ihdr_len = self._io.read_bytes(4)
         self._debug['ihdr_len']['end'] = self._io.pos()
-        if not self.ihdr_len == b"\x00\x00\x00\x0D":
+        if self.ihdr_len != b"\x00\x00\x00\x0D":
             raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x0D", self.ihdr_len, self._io, u"/seq/1")
         self._debug['ihdr_type']['start'] = self._io.pos()
         self.ihdr_type = self._io.read_bytes(4)
         self._debug['ihdr_type']['end'] = self._io.pos()
-        if not self.ihdr_type == b"\x49\x48\x44\x52":
+        if self.ihdr_type != b"\x49\x48\x44\x52":
             raise kaitaistruct.ValidationNotEqualError(b"\x49\x48\x44\x52", self.ihdr_type, self._io, u"/seq/2")
         self._debug['ihdr']['start'] = self._io.pos()
         self.ihdr = Png.IhdrChunk(self._io, self, self._root)
@@ -60,7 +62,7 @@ class Png(KaitaiStruct):
         self.chunks = []
         i = 0
         while True:
-            if not 'arr' in self._debug['chunks']:
+            if 'arr' not in self._debug['chunks']:
                 self._debug['chunks']['arr'] = []
             self._debug['chunks']['arr'].append({'start': self._io.pos()})
             _t_chunks = Png.Chunk(self._io, self, self._root)
@@ -315,7 +317,7 @@ class Png(KaitaiStruct):
             self.entries = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['entries']:
+                if 'arr' not in self._debug['entries']:
                     self._debug['entries']['arr'] = []
                 self._debug['entries']['arr'].append({'start': self._io.pos()})
                 _t_entries = Png.Rgb(self._io, self, self._root)
@@ -446,16 +448,14 @@ class Png(KaitaiStruct):
             if _on == Png.ColorType.indexed:
                 self.bkgd = Png.BkgdIndexed(self._io, self, self._root)
                 self.bkgd._read()
-            elif _on == Png.ColorType.truecolor_alpha:
+            elif (
+                _on == Png.ColorType.truecolor_alpha
+                or _on != Png.ColorType.greyscale_alpha
+                and _on == Png.ColorType.truecolor
+            ):
                 self.bkgd = Png.BkgdTruecolor(self._io, self, self._root)
                 self.bkgd._read()
-            elif _on == Png.ColorType.greyscale_alpha:
-                self.bkgd = Png.BkgdGreyscale(self._io, self, self._root)
-                self.bkgd._read()
-            elif _on == Png.ColorType.truecolor:
-                self.bkgd = Png.BkgdTruecolor(self._io, self, self._root)
-                self.bkgd._read()
-            elif _on == Png.ColorType.greyscale:
+            elif _on in [Png.ColorType.greyscale_alpha, Png.ColorType.greyscale]:
                 self.bkgd = Png.BkgdGreyscale(self._io, self, self._root)
                 self.bkgd._read()
             self._debug['bkgd']['end'] = self._io.pos()

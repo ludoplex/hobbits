@@ -9,7 +9,9 @@ import zlib
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Swf(KaitaiStruct):
     """SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
@@ -66,7 +68,7 @@ class Swf(KaitaiStruct):
         self._debug['signature']['start'] = self._io.pos()
         self.signature = self._io.read_bytes(2)
         self._debug['signature']['end'] = self._io.pos()
-        if not self.signature == b"\x57\x53":
+        if self.signature != b"\x57\x53":
             raise kaitaistruct.ValidationNotEqualError(b"\x57\x53", self.signature, self._io, u"/seq/1")
         self._debug['version']['start'] = self._io.pos()
         self.version = self._io.read_u1()
@@ -161,7 +163,7 @@ class Swf(KaitaiStruct):
             self.tags = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['tags']:
+                if 'arr' not in self._debug['tags']:
                     self._debug['tags']['arr'] = []
                 self._debug['tags']['arr'].append({'start': self._io.pos()})
                 _t_tags = Swf.Tag(self._io, self, self._root)
@@ -271,7 +273,7 @@ class Swf(KaitaiStruct):
             self._debug['symbols']['start'] = self._io.pos()
             self.symbols = [None] * (self.num_symbols)
             for i in range(self.num_symbols):
-                if not 'arr' in self._debug['symbols']:
+                if 'arr' not in self._debug['symbols']:
                     self._debug['symbols']['arr'] = []
                 self._debug['symbols']['arr'].append({'start': self._io.pos()})
                 _t_symbols = Swf.SymbolClassBody.Symbol(self._io, self, self._root)

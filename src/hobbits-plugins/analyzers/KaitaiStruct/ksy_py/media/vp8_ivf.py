@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Vp8Ivf(KaitaiStruct):
     """IVF is a simple container format for raw VP8 data, which is an open
@@ -30,7 +32,7 @@ class Vp8Ivf(KaitaiStruct):
         self._debug['magic1']['start'] = self._io.pos()
         self.magic1 = self._io.read_bytes(4)
         self._debug['magic1']['end'] = self._io.pos()
-        if not self.magic1 == b"\x44\x4B\x49\x46":
+        if self.magic1 != b"\x44\x4B\x49\x46":
             raise kaitaistruct.ValidationNotEqualError(b"\x44\x4B\x49\x46", self.magic1, self._io, u"/seq/0")
         self._debug['version']['start'] = self._io.pos()
         self.version = self._io.read_u2le()
@@ -41,7 +43,7 @@ class Vp8Ivf(KaitaiStruct):
         self._debug['codec']['start'] = self._io.pos()
         self.codec = self._io.read_bytes(4)
         self._debug['codec']['end'] = self._io.pos()
-        if not self.codec == b"\x56\x50\x38\x30":
+        if self.codec != b"\x56\x50\x38\x30":
             raise kaitaistruct.ValidationNotEqualError(b"\x56\x50\x38\x30", self.codec, self._io, u"/seq/3")
         self._debug['width']['start'] = self._io.pos()
         self.width = self._io.read_u2le()
@@ -64,7 +66,7 @@ class Vp8Ivf(KaitaiStruct):
         self._debug['image_data']['start'] = self._io.pos()
         self.image_data = [None] * (self.num_frames)
         for i in range(self.num_frames):
-            if not 'arr' in self._debug['image_data']:
+            if 'arr' not in self._debug['image_data']:
                 self._debug['image_data']['arr'] = []
             self._debug['image_data']['arr'].append({'start': self._io.pos()})
             _t_image_data = Vp8Ivf.Blocks(self._io, self, self._root)

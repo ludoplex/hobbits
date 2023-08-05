@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 import ethernet_frame
 import packet_ppi
@@ -143,7 +145,7 @@ class Pcap(KaitaiStruct):
         self.packets = []
         i = 0
         while not self._io.is_eof():
-            if not 'arr' in self._debug['packets']:
+            if 'arr' not in self._debug['packets']:
                 self._debug['packets']['arr'] = []
             self._debug['packets']['arr'].append({'start': self._io.pos()})
             _t_packets = Pcap.Packet(self._io, self, self._root)
@@ -170,7 +172,7 @@ class Pcap(KaitaiStruct):
             self._debug['magic_number']['start'] = self._io.pos()
             self.magic_number = self._io.read_bytes(4)
             self._debug['magic_number']['end'] = self._io.pos()
-            if not self.magic_number == b"\xD4\xC3\xB2\xA1":
+            if self.magic_number != b"\xD4\xC3\xB2\xA1":
                 raise kaitaistruct.ValidationNotEqualError(b"\xD4\xC3\xB2\xA1", self.magic_number, self._io, u"/types/header/seq/0")
             self._debug['version_major']['start'] = self._io.pos()
             self.version_major = self._io.read_u2le()

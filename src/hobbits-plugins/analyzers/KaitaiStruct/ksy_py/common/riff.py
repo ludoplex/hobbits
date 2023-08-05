@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Riff(KaitaiStruct):
     """The Resource Interchange File Format (RIFF) is a generic file container format
@@ -99,26 +101,21 @@ class Riff(KaitaiStruct):
             self._m_subchunks = []
             i = 0
             while not io.is_eof():
-                if not 'arr' in self._debug['_m_subchunks']:
+                if 'arr' not in self._debug['_m_subchunks']:
                     self._debug['_m_subchunks']['arr'] = []
                 self._debug['_m_subchunks']['arr'].append({'start': io.pos()})
                 _on = self.form_type
+                if 'arr' not in self._debug['_m_subchunks']:
+                    self._debug['_m_subchunks']['arr'] = []
                 if _on == Riff.Fourcc.info:
-                    if not 'arr' in self._debug['_m_subchunks']:
-                        self._debug['_m_subchunks']['arr'] = []
                     self._debug['_m_subchunks']['arr'].append({'start': io.pos()})
                     _t__m_subchunks = Riff.InfoSubchunk(io, self, self._root)
-                    _t__m_subchunks._read()
-                    self._m_subchunks.append(_t__m_subchunks)
-                    self._debug['_m_subchunks']['arr'][len(self._m_subchunks) - 1]['end'] = io.pos()
                 else:
-                    if not 'arr' in self._debug['_m_subchunks']:
-                        self._debug['_m_subchunks']['arr'] = []
                     self._debug['_m_subchunks']['arr'].append({'start': io.pos()})
                     _t__m_subchunks = Riff.ChunkType(io, self, self._root)
-                    _t__m_subchunks._read()
-                    self._m_subchunks.append(_t__m_subchunks)
-                    self._debug['_m_subchunks']['arr'][len(self._m_subchunks) - 1]['end'] = io.pos()
+                _t__m_subchunks._read()
+                self._m_subchunks.append(_t__m_subchunks)
+                self._debug['_m_subchunks']['arr'][len(self._m_subchunks) - 1]['end'] = io.pos()
                 self._debug['_m_subchunks']['arr'][len(self._m_subchunks) - 1]['end'] = io.pos()
                 i += 1
 
@@ -392,7 +389,7 @@ class Riff(KaitaiStruct):
             self._m_subchunks = []
             i = 0
             while not io.is_eof():
-                if not 'arr' in self._debug['_m_subchunks']:
+                if 'arr' not in self._debug['_m_subchunks']:
                     self._debug['_m_subchunks']['arr'] = []
                 self._debug['_m_subchunks']['arr'].append({'start': io.pos()})
                 _t__m_subchunks = Riff.ChunkType(io, self, self._root)

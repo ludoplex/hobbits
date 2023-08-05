@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Wav(KaitaiStruct):
     """The WAVE file format is a subset of Microsoft's RIFF specification for the
@@ -554,7 +556,7 @@ class Wav(KaitaiStruct):
             self._debug['cue_points']['start'] = self._io.pos()
             self.cue_points = [None] * (self.dw_cue_points)
             for i in range(self.dw_cue_points):
-                if not 'arr' in self._debug['cue_points']:
+                if 'arr' not in self._debug['cue_points']:
                     self._debug['cue_points']['arr'] = []
                 self._debug['cue_points']['arr'].append({'start': self._io.pos()})
                 _t_cue_points = Wav.CuePointType(self._io, self, self._root)
@@ -599,12 +601,12 @@ class Wav(KaitaiStruct):
             self._m_subchunks = []
             i = 0
             while not io.is_eof():
-                if not 'arr' in self._debug['_m_subchunks']:
+                if 'arr' not in self._debug['_m_subchunks']:
                     self._debug['_m_subchunks']['arr'] = []
                 self._debug['_m_subchunks']['arr'].append({'start': io.pos()})
                 _on = self.form_type
                 if _on == Wav.Fourcc.info:
-                    if not 'arr' in self._debug['_m_subchunks']:
+                    if 'arr' not in self._debug['_m_subchunks']:
                         self._debug['_m_subchunks']['arr'] = []
                     self._debug['_m_subchunks']['arr'].append({'start': io.pos()})
                     _t__m_subchunks = Wav.InfoChunkType(io, self, self._root)
@@ -808,7 +810,7 @@ class Wav(KaitaiStruct):
             self._m_subchunks = []
             i = 0
             while not io.is_eof():
-                if not 'arr' in self._debug['_m_subchunks']:
+                if 'arr' not in self._debug['_m_subchunks']:
                     self._debug['_m_subchunks']['arr'] = []
                 self._debug['_m_subchunks']['arr'].append({'start': io.pos()})
                 _t__m_subchunks = Wav.ChunkType(io, self, self._root)

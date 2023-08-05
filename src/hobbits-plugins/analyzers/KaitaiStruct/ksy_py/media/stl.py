@@ -7,7 +7,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Stl(KaitaiStruct):
     """STL files are used to represent simple 3D models, defined using
@@ -44,7 +46,7 @@ class Stl(KaitaiStruct):
         self._debug['triangles']['start'] = self._io.pos()
         self.triangles = [None] * (self.num_triangles)
         for i in range(self.num_triangles):
-            if not 'arr' in self._debug['triangles']:
+            if 'arr' not in self._debug['triangles']:
                 self._debug['triangles']['arr'] = []
             self._debug['triangles']['arr'].append({'start': self._io.pos()})
             _t_triangles = Stl.Triangle(self._io, self, self._root)
@@ -74,7 +76,7 @@ class Stl(KaitaiStruct):
             self._debug['vertices']['start'] = self._io.pos()
             self.vertices = [None] * (3)
             for i in range(3):
-                if not 'arr' in self._debug['vertices']:
+                if 'arr' not in self._debug['vertices']:
                     self._debug['vertices']['arr'] = []
                 self._debug['vertices']['arr'].append({'start': self._io.pos()})
                 _t_vertices = Stl.Vec3d(self._io, self, self._root)

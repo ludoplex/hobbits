@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class QuicktimeMov(KaitaiStruct):
     """
@@ -253,7 +255,7 @@ class QuicktimeMov(KaitaiStruct):
             self.compatible_brands = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['compatible_brands']:
+                if 'arr' not in self._debug['compatible_brands']:
                     self._debug['compatible_brands']['arr'] = []
                 self._debug['compatible_brands']['arr'].append({'start': self._io.pos()})
                 self.compatible_brands.append(KaitaiStream.resolve_enum(QuicktimeMov.Brand, self._io.read_u4be()))
@@ -464,7 +466,7 @@ class QuicktimeMov(KaitaiStruct):
             self.items = []
             i = 0
             while not self._io.is_eof():
-                if not 'arr' in self._debug['items']:
+                if 'arr' not in self._debug['items']:
                     self._debug['items']['arr'] = []
                 self._debug['items']['arr'].append({'start': self._io.pos()})
                 _t_items = QuicktimeMov.Atom(self._io, self, self._root)

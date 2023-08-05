@@ -8,7 +8,9 @@ import collections
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+    raise Exception(
+        f"Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have {kaitaistruct.__version__}"
+    )
 
 class Pcx(KaitaiStruct):
 
@@ -52,7 +54,7 @@ class Pcx(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(1)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x0A":
+            if self.magic != b"\x0A":
                 raise kaitaistruct.ValidationNotEqualError(b"\x0A", self.magic, self._io, u"/types/header/seq/0")
             self._debug['version']['start'] = self._io.pos()
             self.version = KaitaiStream.resolve_enum(Pcx.Versions, self._io.read_u1())
@@ -87,7 +89,7 @@ class Pcx(KaitaiStruct):
             self._debug['reserved']['start'] = self._io.pos()
             self.reserved = self._io.read_bytes(1)
             self._debug['reserved']['end'] = self._io.pos()
-            if not self.reserved == b"\x00":
+            if self.reserved != b"\x00":
                 raise kaitaistruct.ValidationNotEqualError(b"\x00", self.reserved, self._io, u"/types/header/seq/11")
             self._debug['num_planes']['start'] = self._io.pos()
             self.num_planes = self._io.read_u1()
@@ -118,12 +120,12 @@ class Pcx(KaitaiStruct):
             self._debug['magic']['start'] = self._io.pos()
             self.magic = self._io.read_bytes(1)
             self._debug['magic']['end'] = self._io.pos()
-            if not self.magic == b"\x0C":
+            if self.magic != b"\x0C":
                 raise kaitaistruct.ValidationNotEqualError(b"\x0C", self.magic, self._io, u"/types/t_palette_256/seq/0")
             self._debug['colors']['start'] = self._io.pos()
             self.colors = [None] * (256)
             for i in range(256):
-                if not 'arr' in self._debug['colors']:
+                if 'arr' not in self._debug['colors']:
                     self._debug['colors']['arr'] = []
                 self._debug['colors']['arr'].append({'start': self._io.pos()})
                 _t_colors = Pcx.Rgb(self._io, self, self._root)
